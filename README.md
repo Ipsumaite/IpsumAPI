@@ -14,3 +14,13 @@ apiport - API local port, it will accept host port
 apikey - API key
 apitokenttl - Token time to live (s)
 ```
+
+
+### Create User
+Use signup method (POST)
+
+```
+email: "email"
+password: "password"
+user: {"firstname":" "First Name", "lastname":"Last Name", "phone":"Phone Number", "address":"Address"}
+```
