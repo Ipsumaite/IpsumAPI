@@ -30,11 +30,14 @@ user: {"firstname":" "First Name", "lastname":"Last Name", "phone":"Phone Number
 
 ### Methods
 Unsecured Methods
+```
 /ping - Tests if the server is alive
 /login - Requests user authentication
 /signup - Creates Account
-
+```
 Secured Methods
+```
 /api/SFping - Tests if the Salesforce Connectivity is established
+```
 
 
