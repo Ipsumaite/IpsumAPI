@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Ipsumaite/IpsumAPI.svg)](https://travis-ci.org/Ipsumaite/IpsumAPI)
+[![Build Status](https://travis-ci.org/Ipsumaite/IpsumAPI.svg?branch=oceano)](https://travis-ci.org/Ipsumaite/IpsumAPI)
 
 # IpsumAPI
 
