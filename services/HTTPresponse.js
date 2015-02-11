@@ -6,7 +6,7 @@ exports.resError = function (res, msg, errorCode, Content) {
     var datetmp = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDay(); 
         datetmp += ' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
     
-    logger.logMessage(msg);
+    logger.logError(msg);
     try{
         res.writeHead(errorCode, Content);
         res.write(datetmp + ", Error ");
@@ -18,11 +18,13 @@ exports.resError = function (res, msg, errorCode, Content) {
 }
 
 exports.resUsual = function (res, msg, resCode, Content) {
+    logger.logMessage(msg);
     res.writeHead(resCode, Content);
     res.write(msg);
     res.end("");
 }
 
 exports.resFast = function(res, msg, resCode){
+     logger.logError(msg);
      res.status(resCode).send(msg);
 }

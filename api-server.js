@@ -34,7 +34,7 @@ app.use(function(req, res, next){
 app.all("/api/*", function(req, res, next){
     logger.logMessage("Calling an API CRM secured resource...");
      if (!req.headers.authorization){
-        logger.logMessage(" Refusing for not being authorized from host:" + req.hostname);
+        logger.logError(" Refusing for not being authorized from host:" + req.hostname);
         return res.status(301).send({message: 'You are not authorized to access this resource, please authenticate yourself'});
      }else{
         // Testing token validation
@@ -42,6 +42,7 @@ app.all("/api/*", function(req, res, next){
             var token = req.headers.authorization.split(' ')[1];
             var payload = jwt.decode(token, process.env.apikey);
         } catch(err){
+            logger.logError( ' Wrong token, please authenticate again.');
             return res.status(301).send({message: ' Wrong token, please authenticate again.'});
         }
         timediff = Math.round((Date.now()-payload.seed)/1000);
@@ -68,12 +69,24 @@ app.all("*", function(req,res){
 
 // ################################################################################################################
 app.listen(app.get('port'), function(){
-    logger.logMessage("----------------------------------------------------------------");
-    logger.logMessage("        Starting Ipsum API\n" );
-    logger.logMessage("----------------------------------------------------------------");
-    logger.logMessage(" Version: "+NPMinstall.version + ".\n");
-    logger.logMessage(" Current Developer:" + NPMinstall.author);
-    logger.logMessage("----------------------------------------------------------------");
-    logger.logMessage(" Listening on port " + app.get('port'));
-    logger.logMessage("----------------------------------------------------------------\n\n\n\n\n");
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple("        Starting" );
+    logger.logMessageSimple(" ###                                   #    ######  ### ");
+    logger.logMessageSimple("  #  #####   ####  #    # #    #      # #   #     #  #  ");
+    logger.logMessageSimple("  #  #    # #      #    # ##  ##     #   #  #     #  #  ");
+    logger.logMessageSimple("  #  #    #  ####  #    # # ## #    #     # ######   #  ");
+    logger.logMessageSimple("  #  #####       # #    # #    #    ####### #        #  ");
+    logger.logMessageSimple("  #  #      #    # #    # #    #    #     # #        #  ");
+    logger.logMessageSimple(" ### #       ####   ####  #    #    #     # #       ### ");
+ 
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple(" Version: "+NPMinstall.version);
+    logger.logMessageSimple(" Current Developer:" + NPMinstall.author);
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple(" Listening on port " + app.get('port'));
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
+    logger.logMessageSimple("-----------------------------------------------------------------------------------");
 });

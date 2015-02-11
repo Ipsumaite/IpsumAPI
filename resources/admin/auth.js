@@ -23,6 +23,21 @@ function tokenFactory(req){
 }
 
 
+exports.SFping = function(req, res){
+    var strSOQL= 'SELECT id FROM Account limit 1';
+    
+    sfWrapper.querySOQL(strSOQL, function (error, result) {
+        if (error) { 
+            httpRes.resError(res, 'Testing Salesforce Connectivity', 400, { 'Content-Type': 'text/plain' });
+            return;
+        }
+        else{
+            res.status(200).send(result.done);
+        }
+    });
+        
+}
+
 //######################################################################################################3
 //signup
 exports.signup=function (req, res) {
@@ -42,7 +57,7 @@ exports.signup=function (req, res) {
     var passwd=  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/;  
     if (JSON.stringify(req.body.password).length < apiconfig.pwdlength.min ||  JSON.stringify(req.body.password).length > apiconfig.pwdlength.max
         || !req.body.password.match(passwd)){
-        httpRes.resError(res, 'Check your password please, length must be between 8 and 15 and contain special characters', 406, { 'Content-Type': 'text/plain' });
+        httpRes.resError(res, 'Check your password please, length must be between '+ apiconfig.pwdlength.min+' and '+ apiconfig.pwdlength.max+' and contain special characters', 406, { 'Content-Type': 'text/plain' });
         return;
     
     }
@@ -82,4 +97,42 @@ exports.signup=function (req, res) {
             return;
         }
     });
+}
+
+
+//Validates Login
+exports.login=function (req, res) {
+    
+    var params = {
+        email: req.body.email,
+        password: req.body.password,
+        passwordhash: 'No password'
+    };
+    
+    if (req.body.password == undefined || req.body.email == undefined){
+        httpRes.resError(res, 'Check the required fields please to progress on this request', 404, { 'Content-Type': 'text/plain' });
+        return;
+    }
+
+    var strSOQL = "SELECT Email,Password__c FROM Contact where Email =\'" + req.body.email + "\' ";
+    sfWrapper.querySOQL(strSOQL, function (error, result) {
+        if (error) { 
+            httpRes.resError(res, 'Unkown error checking login, please contact System Administrator', 404, { 'Content-Type': 'text/plain' });
+            return;
+        }
+        if (result && result.records[0].Password__c!= undefined) {
+            bcrypt.compare(params.password, result.records[0].Password__c, function(err, doesMatch){
+                if (doesMatch){
+                    var token = tokenFactory(req);
+                    res.status(200).send({status: 'Authenticated', email: req.body.email, token:token});
+                }else{
+                    httpRes.resError(res, 'Wrong Login or password', 404, { 'Content-Type': 'text/plain' });
+                }
+            });
+        }
+        else {
+            httpRes.resError(res, 'Error, User does not exists', 404, { 'Content-Type': 'text/plain' });
+        }
+    });
+    return;
 }
