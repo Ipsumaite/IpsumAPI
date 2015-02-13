@@ -25,6 +25,6 @@ exports.resUsual = function (res, msg, resCode, Content) {
 }
 
 exports.resFast = function(res, msg, resCode){
-     logger.logError(msg);
+     logger.logMessage(msg);
      res.status(resCode).send(msg);
 }

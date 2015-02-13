@@ -32,7 +32,7 @@ exports.SFping = function(req, res){
             return;
         }
         else{
-            res.status(200).send(result.done);
+            httpRes.resFast(res,'SFpong ' + result.done, 200);
         }
     });
         
@@ -75,7 +75,7 @@ exports.signup=function (req, res) {
         }
         if (result) {
               if (result.totalSize> 0) {
-                httpRes.resError(res, 'User already Exists', 400, { 'Content-Type': 'text/plain' });
+                httpRes.resError(res, 'User '+ params.email +' already Exists', 400, { 'Content-Type': 'text/plain' });
               }else{
                  sfWrapper.createAccount(params, function (err, result) {
                         if (err) { 
@@ -84,10 +84,16 @@ exports.signup=function (req, res) {
                         }
                         if (result) {
                             var token = tokenFactory(req);
-                            res.status(200).send({status: 'Authenticated', email: req.body.email, token:token});
+                             httpRes.resFast(res,{
+                                status: 'Authenticated',
+                                email: req.body.email,
+                                token:token,
+                                firstname: params.userinfo.firstname,
+                                lastname: params.userinfo.lastname
+                            }, 200);
                         }
                         else {
-                            res.status(302).send('No results');
+                            httpRes.resFast(res,'No results', 302);
                         }
                     });
               }
@@ -114,17 +120,25 @@ exports.login=function (req, res) {
         return;
     }
 
-    var strSOQL = "SELECT Email,Password__c FROM Contact where Email =\'" + req.body.email + "\' ";
+    var strSOQL = "SELECT Email,Password__c, FirstName, LastName FROM Contact where Email =\'" + req.body.email + "\' ";
     sfWrapper.querySOQL(strSOQL, function (error, result) {
         if (error) { 
             httpRes.resError(res, 'Unkown error checking login, please contact System Administrator', 404, { 'Content-Type': 'text/plain' });
             return;
         }
-        if (result && result.records[0].Password__c!= undefined) {
+        console.log(result);
+        if (result && result.totalSize > 0) {
             bcrypt.compare(params.password, result.records[0].Password__c, function(err, doesMatch){
                 if (doesMatch){
                     var token = tokenFactory(req);
-                    res.status(200).send({status: 'Authenticated', email: req.body.email, token:token});
+                    httpRes.resFast(res,{
+                        status: 'Authenticated', 
+                        email: req.body.email, 
+                        token:token, 
+                        firstname: result.records[0].FirstName, 
+                        lastname: result.records[0].LastName
+                    },200);
+                    
                 }else{
                     httpRes.resError(res, 'Wrong Login or password', 404, { 'Content-Type': 'text/plain' });
                 }
