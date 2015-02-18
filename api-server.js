@@ -60,6 +60,10 @@ app.all("/api/*", function(req, res, next){
 var admin = require('./resources/admin/index.js');
 app.use(admin);
 
+var channels = require('./resources/channels/index.js');
+app.use(channels);
+
+
 
 // All Routes ###################################################################################################
 app.all("*", function(req,res){

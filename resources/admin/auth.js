@@ -126,7 +126,6 @@ exports.login=function (req, res) {
             httpRes.resError(res, 'Unkown error checking login, please contact System Administrator', 404, { 'Content-Type': 'text/plain' });
             return;
         }
-        console.log(result);
         if (result && result.totalSize > 0) {
             bcrypt.compare(params.password, result.records[0].Password__c, function(err, doesMatch){
                 if (doesMatch){

@@ -26,3 +26,5 @@ app.get("/api/SFping", function(req,res){
     logger.logMessage("SF pinging and ponging");
     return auth.SFping(req, res);
 });
+
+
