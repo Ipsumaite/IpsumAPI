@@ -88,19 +88,19 @@ exports.createAccount = function(params, callback){
 
 
 
-export.CreateChannel=function(params, callback){
+exports.CreateChannel=function(params, callback){
     
     var conn = new sf.Connection({});
     conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
         if (err) { callback(err);  
         }else{
-    
-    conn.sobject("IpsumChannel__c").create(params, function(err, result) {
+            conn.sobject("IpsumChannel__c").create(params, function(err, result) {
                                     if (err){
                                         console.log(err);
                                         callback(err);
                                     }else
                                         callback(null, result);
-                                });
+            });
         }
+    });
 }
