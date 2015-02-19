@@ -46,8 +46,15 @@ exports.signup=function (req, res) {
         email: req.body.email,
         password: req.body.password,
         passwordhash: 'No password',
-        userinfo: JSON.parse(req.body.user)
+        userinfo: req.body.user
     };
+    
+    logger.logMessage("User " + req.body.email + " Email: " + req.body.email);
+    logger.logMessage("User " + req.body.email + " Password: " + req.body.password);
+    logger.logMessage("User " + req.body.email + " First Name: " + req.body.user.firstname);
+    logger.logMessage("User " + req.body.email + " Last Name: " + req.body.user.lastname);
+    logger.logMessage("User " + req.body.email + " Phone: " + req.body.user.phone);
+    logger.logMessage("User " + req.body.email + " Address: " + req.body.user.address);
 
     if (req.body.password == undefined || req.body.email == undefined || params.userinfo.firstname == undefined
         || params.userinfo.lastname == undefined || params.userinfo.phone == undefined || params.userinfo.address == undefined){
@@ -130,6 +137,7 @@ exports.login=function (req, res) {
             bcrypt.compare(params.password, result.records[0].Password__c, function(err, doesMatch){
                 if (doesMatch){
                     var token = tokenFactory(req);
+                    logger.logMessage("User " + req.body.email + " Authenticated!");
                     httpRes.resFast(res,{
                         status: 'Authenticated', 
                         email: req.body.email, 

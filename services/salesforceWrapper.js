@@ -1,4 +1,5 @@
 var sf = require('node-salesforce');
+var logger = require('./logger.js');
 
 
 var sfconfig = {
@@ -12,12 +13,24 @@ function SOQLquery(SOQL, callback){
         if (err) { return console.error(err); }
         conn.query(SOQL, function(err, result) {
             if (err) {
+                logger.logError(err);
                 callback(err); 
             }else{
                 callback(null, result);
             }
         });
     });
+}
+
+
+// Generates Codes
+function randString(x){
+    var s = "";
+    while(s.length<x&&x>0){
+        var r = Math.random();
+        s+= (r<0.1?Math.floor(r*100):String.fromCharCode(Math.floor(r*26) + (r>0.5?97:65)));
+    }
+    return s;
 }
 
 exports.querySOQL = SOQLquery;
@@ -34,7 +47,8 @@ exports.createAccount = function(params, callback){
     conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
         if (err) { callback(err);  }
         conn.sobject("Account").create(accountparams, function(err, result) {
-            if (err) { 
+            if (err) {
+                logger.logError(err);
                 callback(err); 
             }else{
                 var strSOQL = ' SELECT Id, Name, Phone FROM Account where Name=\''  + params.email + '\'';
@@ -56,13 +70,13 @@ exports.createAccount = function(params, callback){
                         };
                         conn.sobject("Contact").create(contactparams, function(err, result) {
                             if (err){
-                                console.log(err);
+                                logger.logError(err);
                                 callback(err);
                             }
                             else{
                                 var channelparams = {
                                      AccountID__c: contactparams.AccountId, 
-                                     channelcode__c: params.channelcode,
+                                     channelcode__c: randString(20),
                                      Active__c: true,
                                      Premium__c: false,
                                      Visible__c: false,
@@ -70,7 +84,7 @@ exports.createAccount = function(params, callback){
                                 };
                                 conn.sobject("IpsumChannel__c").create(channelparams, function(err, result) {
                                     if (err){
-                                        console.log(err);
+                                        logger.logError(err);
                                         callback(err);
                                     }else
                                         callback(null, result);
@@ -86,21 +100,66 @@ exports.createAccount = function(params, callback){
     });
 }
 
-
-
 exports.CreateChannel=function(params, callback){
     
     var conn = new sf.Connection({});
+    params.channelcode__c=randString(20);
     conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
-        if (err) { callback(err);  
+        if (err) {
+            logger.logMessage(err);
+            callback(err);  
         }else{
             conn.sobject("IpsumChannel__c").create(params, function(err, result) {
-                                    if (err){
-                                        console.log(err);
-                                        callback(err);
-                                    }else
-                                        callback(null, result);
+                    if (err){
+                            logger.logError(err);
+                            callback(err);
+                    }else
+                            callback(null, result);
             });
         }
     });
 }
+
+
+exports.DeleteChannel=function(params, callback){
+    var conn = new sf.Connection({});
+    conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
+        if (err) {
+            logger.logMessage(err);
+            callback(err);  
+        }else{
+            conn.sobject("IpsumChannel__c").destroy(params.Id, function(err, ret) {
+                    if (err){
+                            logger.logError(err);
+                            callback(err);
+                    }else
+                            callback(null, result);
+            });
+        }
+    });
+}
+
+
+exports.UpdateChannel=function(params, callback){
+    var conn = new sf.Connection({});
+    conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
+        if (err) {
+            logger.logMessage(err);
+            callback(err);  
+        }else{
+            conn.sobject("IpsumChannel__c").update(
+                params, 
+                function(err, result) {
+                    if (err){
+                        logger.logError(err);
+                        callback(err);
+                    }else
+                        callback(null, result);
+                });
+        }
+    });
+}
+
+
+
+
