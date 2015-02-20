@@ -1,5 +1,6 @@
 var winston = require('winston'),
     Papertrail = require('winston-papertrail').Papertrail;
+    os = require('os');
  
 var logger,
     consoleLogger = new winston.transports.Console({
@@ -13,7 +14,7 @@ var logger,
         host: process.env.loggerhost,
         port: process.env.loggerport,
         colorize: true,
-        hostname: 'IPSUMAPI',
+        hostname: os.hostname(),
         level: 'debug',
         logFormat: function(level, message) {
             return '[' + level + '] ' + message;

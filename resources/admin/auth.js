@@ -137,7 +137,7 @@ exports.login=function (req, res) {
             bcrypt.compare(params.password, result.records[0].Password__c, function(err, doesMatch){
                 if (doesMatch){
                     var token = tokenFactory(req);
-                    logger.logMessage("User " + req.body.email + " Authenticated!");
+                  logger.logMessage("User " + req.body.email + " Authenticated! with token:"+token);
                     httpRes.resFast(res,{
                         status: 'Authenticated', 
                         email: req.body.email, 
