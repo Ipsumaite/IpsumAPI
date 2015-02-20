@@ -41,7 +41,6 @@ app.all("/api/*", function(req, res, next){
         try {
             var token = req.headers.authorization.split(' ')[1];
             var payload = jwt.decode(token, process.env.apikey);
-            logger.logMessage("Payload "+ token);
         } catch(err){
             logger.logError( ' Wrong token, please authenticate again.');
             return res.status(301).send({message: ' Wrong token, please authenticate again.'});

@@ -38,6 +38,9 @@ Unsecured Methods
 Secured Methods
 ```
 /api/SFping - Tests if the Salesforce Connectivity is established
+/api/readtokens - Decrypts respective user for the token in the authorization header
+/api/mychannels - (GET) reads all the channels from a user
+/api/mychannels - (POST) stores and updates channels for the indicated users
 ```
 
 
