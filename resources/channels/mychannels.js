@@ -43,7 +43,7 @@ exports.syncmychannels = function(req,res){
     var strSOQL= 'SELECT AccountId FROM Contact where Email=\'' + req.body.email +'\'';
     sfWrapper.querySOQL(strSOQL, function (error, result) {
         if (error) { 
-            httpRes.resError(res, ' looking for account ID for user ' + req.params.email, 400, { 'Content-Type': 'text/plain' });
+            httpRes.resError(res, ' looking for account ID for user ' + req.body.email, 400, { 'Content-Type': 'text/plain' });
             return;
         }
         else{
@@ -103,7 +103,7 @@ exports.syncmychannels = function(req,res){
                 
             }
             else {
-                httpRes.resError(res, 'Error, User '+ req.params.email +' does not exists', 404, { 'Content-Type': 'text/plain' });
+                httpRes.resError(res, ' User '+ req.body.email +' does not exists', 404, { 'Content-Type': 'text/plain' });
             }
 
             return;

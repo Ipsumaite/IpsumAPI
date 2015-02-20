@@ -33,7 +33,7 @@ app.use(function(req, res, next){
 // Get Resources
 app.all("/api/*", function(req, res, next){
     logger.logMessage("Calling an API CRM secured resource...");
-     if (!req.headers.authorization){
+     if (!req.headers.authorization || undefined == req.headers.authorization ){
         logger.logError(" Refusing for not being authorized from host:" + req.hostname);
         return res.status(301).send({message: 'You are not authorized to access this resource, please authenticate yourself'});
      }else{
@@ -41,15 +41,17 @@ app.all("/api/*", function(req, res, next){
         try {
             var token = req.headers.authorization.split(' ')[1];
             var payload = jwt.decode(token, process.env.apikey);
+            logger.logMessage("Payload "+ token);
         } catch(err){
             logger.logError( ' Wrong token, please authenticate again.');
             return res.status(301).send({message: ' Wrong token, please authenticate again.'});
         }
         timediff = Math.round((Date.now()-payload.seed)/1000);
         if (timediff <= app.get('tokenttl')){
+            logger.logMessage(" Token approved from:" + req.hostname);
             next();
         }else{
-            logger.logMessage(" Expired token:" + req.hostname);
+            logger.logMessage(" Expired token from " + req.hostname);
             return res.status(301).send({message: 'Expired token, please authenticate again.'});
         }
      }

@@ -45,7 +45,7 @@ var logger = new winston.Logger({
 
 exports.logMessage = function(msg){
     var d = new Date();
-    logger.info(msg + ':' + d.toJSON());
+    logger.info(msg + ' :' + d.toJSON());
 };
 
 exports.logMessageSimple = function(msg){
