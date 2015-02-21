@@ -4,7 +4,8 @@ var app = module.exports = express(),
     httpRes = require('../../services/HTTPresponse.js');
 
 
-var mychannels  = require('./mychannels.js');
+var mychannels  = require('./mychannels.js'),
+    subscriptions = require('./subscriptions.js');
 
 
 app.get("/api/mychannels/:email", function(req,res){
@@ -17,3 +18,9 @@ app.post("/api/mychannels", function(req,res){
     logger.logMessage("Updating channels for user:" + req.body.email);
     return mychannels.syncmychannels(req, res);
 });
+
+app.get("/subscriptions/:email", function(req,res){
+   logger.logMessage("Extracting subscriptions for user " + req.params.email);
+   return subscriptions.readAll(req, res);
+});
+
