@@ -19,8 +19,13 @@ app.post("/api/mychannels", function(req,res){
     return mychannels.syncmychannels(req, res);
 });
 
-app.get("/subscriptions/:email", function(req,res){
+app.get("/api/subscriptions/:email", function(req,res){
    logger.logMessage("Extracting subscriptions for user " + req.params.email);
    return subscriptions.readAll(req, res);
+});
+
+app.post("/api/subscriptions", function(req,res){
+   logger.logMessage("Updating subscriptions for user " + req.params.email);
+   return subscriptions.updates(req, res);
 });
 

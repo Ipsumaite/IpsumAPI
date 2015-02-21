@@ -77,7 +77,7 @@ exports.syncmychannels = function(req,res){
                         params.Id = channel.Id;
                         sfWrapper.DeleteChannel(params, function (err, result) {
                             if (err){
-                                logger.logError("It was not possible to create channel " + channel.Name + " for user " + req.body.email);
+                                logger.logError("It was not possible to delete channel " + channel.Name + " for user " + req.body.email);
                             }else{
                                 logger.logMessage("Deleted channel " + channel.Name + " by user " + req.body.email);
                             }

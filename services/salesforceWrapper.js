@@ -161,5 +161,45 @@ exports.UpdateChannel=function(params, callback){
 }
 
 
+exports.CreateSubscription=function(params, callback){
+    
+    var conn = new sf.Connection({});
+    conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
+        if (err) {
+            logger.logMessage(err);
+            callback(err);  
+        }else{
+            conn.sobject("Contract").create(params, function(err, result) {
+                    if (err){
+                            logger.logError(err);
+                            callback(err);
+                    }else
+                            callback(null, result);
+            });
+        }
+    });
+}
+
+
+exports.UpdateSubscription=function(params, callback){
+    var conn = new sf.Connection({});
+    conn.login(sfconfig.user, sfconfig.token, function(err, userInfo) {
+        if (err) {
+            logger.logMessage(err);
+            callback(err);  
+        }else{
+            conn.sobject("Contract").update(
+                params, 
+                function(err, result) {
+                    if (err){
+                        logger.logError(err);
+                        callback(err);
+                    }else
+                        callback(null, result);
+                });
+        }
+    });
+}
+
 
 

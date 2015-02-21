@@ -41,6 +41,8 @@ Secured Methods
 /api/readtokens - Decrypts respective user for the token in the authorization header
 /api/mychannels - (GET) reads all the channels from a user
 /api/mychannels - (POST) stores and updates channels for the indicated users
+/api/subscriptions - (GET) Reads all subscriptions
+/api/subscriptions - (POTS) synchronizes all subscriptions
 ```
 
 
