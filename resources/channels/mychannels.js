@@ -22,7 +22,23 @@ exports.readmychannels = function ChannelRead(req, res){
                         if (errorFinal){
                             httpRes.resError(res, ' Not possible to look channels for user ' + req.params.email, 400, { 'Content-Type': 'text/plain' });
                         }else{
-                            httpRes.resFast(res, resultFinal , 200);
+                            var channels = {};
+                            channels.totalSize=resultFinal.totalSize;
+                            if (resultFinal.totalSize > 0){
+                              resultFinal.records.forEach(function(record){
+                                 var channel ={
+                                   Active: record.Active__c,
+                                   Description: record.description__c,
+                                   AccountId: tmpAccountId,
+                                   Name: record.Name,
+                                   Premium: record.Premium__c,
+                                   Visible: record.Visible__c
+                                };
+                                channels.push(channel);
+                                
+                              });
+                            }
+                            httpRes.resFast(res, channels , 200);
                         }
                     });
                     return;
