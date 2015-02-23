@@ -7,7 +7,6 @@ var logger = require('../../services/logger.js'),
 
 exports.readmychannels = function ChannelRead(req, res){
     
-      
     var strSOQL= 'SELECT AccountId FROM Contact where Email=\'' + req.params.email +'\'';
     sfWrapper.querySOQL(strSOQL, function (error, result) {
         if (error) { 
@@ -15,30 +14,35 @@ exports.readmychannels = function ChannelRead(req, res){
             return;
         }
         else{
-            if (result && result.totalSize > 0) {
+           if (result && result.totalSize > 0) {
                     var tmpAccountId = result.records[0].AccountId;
-                    strSOQL='SELECT Active__c,description__c,Id,Name,Premium__c,Visible__c FROM IpsumChannel__c where AccountID__c = \'' + tmpAccountId + '\'';
+                    strSOQL='SELECT Active__c,description__c,Id,Name,Premium__c,Visible__c FROM IpsumChannel__c where AccountID__c = \'' + tmpAccountId + '\' AND isDeleted__c=false';
                     sfWrapper.querySOQL(strSOQL, function (errorFinal, resultFinal) {
                         if (errorFinal){
                             httpRes.resError(res, ' Not possible to look channels for user ' + req.params.email, 400, { 'Content-Type': 'text/plain' });
                         }else{
-                            var channels = {};
+                            var channels = [];
                             channels.totalSize=resultFinal.totalSize;
                             if (resultFinal.totalSize > 0){
+                              var k =0;
                               resultFinal.records.forEach(function(record){
                                  var channel ={
-                                   Active: record.Active__c,
-                                   Description: record.description__c,
-                                   AccountId: tmpAccountId,
-                                   Name: record.Name,
-                                   Premium: record.Premium__c,
-                                   Visible: record.Visible__c
+                                   "Active": record.Active__c,
+                                   "Description": record.description__c,
+                                   "AccountId": tmpAccountId,
+                                   "Name": record.Name,
+                                   "Id": record.Id,
+                                   "Premium": record.Premium__c,
+                                   "Visible": record.Visible__c
                                 };
                                 channels.push(channel);
-                                
                               });
                             }
-                            httpRes.resFast(res, channels , 200);
+                            var payload = {
+                              "totalSize": resultFinal.totalSize,
+                              "channels": channels
+                            };
+                            httpRes.resFast(res, payload , 200);
                         }
                     });
                     return;
@@ -71,7 +75,7 @@ exports.syncmychannels = function(req,res){
                 req.body.channels.forEach(function(channel){
                     logger.logMessage("Checking channel " + channel.Name + " for user " + req.body.email);
 
-                    params ={
+                    var params ={
                         "Active__c": channel.Active,
                         "description__c": channel.Description,
                         "AccountId__c": tmpAccountId,
@@ -89,19 +93,23 @@ exports.syncmychannels = function(req,res){
                             }
                         });
                    }
-                   if (2==channel.flag){ // Deletes Channel
-                        params.Id = channel.Id;
-                        sfWrapper.DeleteChannel(params, function (err, result) {
-                            if (err){
-                                logger.logError("It was not possible to delete channel " + channel.Name + " for user " + req.body.email);
-                            }else{
-                                logger.logMessage("Deleted channel " + channel.Name + " by user " + req.body.email);
-                            }
-                        });
-                   }
-                   if (3==channel.flag){ // Updates Channel
-                        params.Id = channel.Id;
-                        sfWrapper.UpdateChannel(params, function (err, result) {
+
+                   if (2==channel.flag || 3==channel.flag){ // Updates Channel
+                     
+                      var params2 ={
+                        "Active__c": channel.Active,
+                        "description__c": channel.Description,
+                        "AccountId__c": tmpAccountId,
+                        "Name": channel.Name,
+                        "Premium__c": channel.Premium,
+                        "Visible__c": channel.Visible,
+                        "Id":channel.Id
+                    };
+                     
+                      if (2==channel.flag) {
+                       params2.isDeleted__c = true;
+                     }
+                        sfWrapper.UpdateChannel(params2, function (err, result) {
                             if (err){
                                 logger.logError("It was not possible to update channel " + channel.Name + " for user " + req.body.email);
                             }else{
