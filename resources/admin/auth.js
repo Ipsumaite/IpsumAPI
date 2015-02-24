@@ -157,3 +157,27 @@ exports.login=function (req, res) {
     });
     return;
 }
+
+
+//Reads respective contact ID according the email
+exports.UserId=function (req, res) {
+    
+    var strSOQL = "SELECT Id FROM Contact where Email =\'" + req.params.email + "\' ";
+    sfWrapper.querySOQL(strSOQL, function (error, result) {
+        if (error) { 
+            httpRes.resError(res, 'Unkown error checking login '+req.params.email+', please contact System Administrator', 404, { 'Content-Type': 'text/plain' });
+            return;
+        }
+        if (result && result.totalSize > 0) {
+                   httpRes.resFast(res,{
+                        "email": req.params.email,
+                        "Id": result.records[0].Id
+                   },200);
+        }
+        else {
+            httpRes.resError(res, 'Login not found for ID return for user ' + req.params.email, 404, { 'Content-Type': 'text/plain' });
+        }
+    });
+    return;
+}
+

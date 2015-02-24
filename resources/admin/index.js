@@ -35,5 +35,10 @@ app.get("/api/readtoken", function(req,res){
     httpRes.resFast(res, {"email": payload.sub} , 200);
 });
 
+app.get("/api/accountID/:email", function(req,res){
+    logger.logMessage("Reading User ID from email "+ req.params.email);
+    return auth.UserId(req, res);
+});
+
 
 
