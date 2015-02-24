@@ -64,6 +64,8 @@ app.use(admin);
 var channels = require('./resources/channels/index.js');
 app.use(channels);
 
+var contents = require('./resources/contents/index.js');
+app.use(contents);
 
 
 // All Routes ###################################################################################################
