@@ -32,7 +32,7 @@ app.use(function(req, res, next){
 // #####################################################################################################
 // Get Resources
 app.all("/api/*", function(req, res, next){
-    logger.logMessage("Calling an API CRM secured resource...");
+     logger.logMessage("Calling an API CRM secured resource...");
      if (!req.headers.authorization || undefined == req.headers.authorization ){
         logger.logError(" Refusing for not being authorized from host:" + req.hostname);
         return res.status(301).send({message: 'You are not authorized to access this resource, please authenticate yourself'});
