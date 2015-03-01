@@ -40,9 +40,49 @@ Secured Methods
 /api/SFping - Tests if the Salesforce Connectivity is established
 /api/readtokens - Decrypts respective user for the token in the authorization header
 /api/mychannels - (GET) reads all the channels from a user
+Example: /api/mychannels/:email
+  channel =[{
+             "Active": ...,
+             "Description": ...,
+             "AccountId": ...,
+             "Name": ...,
+             "Id": ...,
+             "Premium": ...,
+             "Visible":...
+             }
+          ]
+
 /api/mychannels - (POST) stores and updates channels for the indicated users
+Example:
+body={
+   channels=[{
+             "Active": ...,
+             "Description": ...,
+             "AccountId": ...,
+             "Name": ...,
+             "Id": ...,
+             "Premium": ...,
+             "Visible":...
+              "flag": 1/2/3 (1- New Channel, 2- Delete Channel, 3- Update Channel
+             }
+          ]
+   
+}
 /api/subscriptions - (GET) Reads all subscriptions
-/api/subscriptions - (POTS) synchronizes all subscriptions
+Example: /api/subscriptions/:email
+channel.Subscription ={
+                                 Id:...,
+                                 ContractTerm: ...,
+                                 ContractNumber:...,
+                                 CreatedDate: ...,
+                                 Description: ...,
+                                 EndDate:...,
+                                 StartDate: ...,
+                                 Status:...
+                       }
+
+/api/subscriptions - (POST) synchronizes all subscriptions
+
 ```
 
 
