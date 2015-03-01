@@ -70,19 +70,54 @@ body={
 }
 /api/subscriptions - (GET) Reads all subscriptions
 Example: /api/subscriptions/:email
-channel.Subscription ={
-                                 Id:...,
-                                 ContractTerm: ...,
-                                 ContractNumber:...,
-                                 CreatedDate: ...,
-                                 Description: ...,
-                                 EndDate:...,
-                                 StartDate: ...,
-                                 Status:...
-                       }
+{
+    "totalSize": 6,
+    "channels": [
+        {
+            "Name": "Channel 1 1234",
+            "Description": "Channel 1 1234",
+            "Subscribed": false,
+            "Id": "a0924000000G2HAAA0",
+            "Premium": false
+        },
+        {
+            "Name": "TV Test",
+            "Description": "Testing another Channel",
+            "Subscribed": false,
+            "Id": "a0924000000G2GLAA0",
+            "Premium": true
+        },
+        {
+            "Name": "IpsumForecast",
+            "Description": "Forecast",
+            "Subscribed": true,
+            "Id": "a0924000000F6myAAC",
+            "Premium": false,
+            "Subscription": {
+                "Id": "80024000000DD3YAAW",
+                "ContractTerm": 6,
+                "ContractNumber": "00000109",
+                "CreatedDate": "2015-02-26T09:43:06.000+0000",
+                "Description": null,
+                "EndDate": "2015-08-25",
+                "StartDate": "2015-02-26",
+                "Status": "Draft"
+            }
+        }
 
 /api/subscriptions - (POST) synchronizes all subscriptions
-
+Example:
+body=
+{
+	"email":"joao.brito.ramos@gmail.com",
+	"subscriptions":[
+		{
+			"ChannelId":"a0924000000FeCoAAK",
+			"flag":1,
+			"ContractTerm":6
+		}
+	]
+}
 ```
 
 
