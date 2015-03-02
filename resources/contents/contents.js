@@ -6,14 +6,14 @@ var logger = require('../../services/logger.js'),
 
 exports.presence=function (req, res) {
 
-    var strSOQL = "SELECT Id FROM Contact where Email =\'" + req.body.email + "\' ";
+    var strSOQL = "SELECT AccountId FROM Contact where Email =\'" + req.body.email + "\' ";
     sfWrapper.querySOQL(strSOQL, function (error, result) {
         if (error) { 
             httpRes.resError(res, 'Unkown error checking login '+req.body.email+', please contact System Administrator', 404, { 'Content-Type': 'text/plain' });
             return;
         }
         if (result && result.totalSize > 0) {
-            var myRef = new Firebase(process.env.FIREBASEURL+"/streams/"+result.records[0].Id+"/beacon");
+            var myRef = new Firebase(process.env.FIREBASEURL+"/streams/"+result.records[0].AccountId+"/beacon");
             myRef.once("value", function(snapshot) {
               if (snapshot.val()){
                 var json = snapshot.val();
