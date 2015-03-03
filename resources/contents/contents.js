@@ -24,7 +24,7 @@ exports.presence=function (req, res) {
                 logger.logMessage(" New stream for user "+req.body.email);
               }
               if (req.body.latitude !== undefined && req.body.longitude !== undefined){
-                myRef.push({
+                myRef.set({
                     latitude: req.body.latitude,
                     longitude: req.body.longitude,
                     date: Firebase.ServerValue.TIMESTAMP,
