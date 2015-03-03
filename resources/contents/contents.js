@@ -41,7 +41,7 @@ exports.presence=function (req, res) {
           
         }
         else {
-            httpRes.resError(res, 'Login not found for ID return for user ' + req.params.email, 404, { 'Content-Type': 'text/plain' });
+            httpRes.resError(res, 'Login not found for ID return for user ' + req.body.email, 404, { 'Content-Type': 'text/plain' });
         }
     });
     return;
