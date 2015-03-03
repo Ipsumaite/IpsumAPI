@@ -23,21 +23,27 @@ exports.presence=function (req, res) {
               }else{
                 logger.logMessage(" New stream for user "+req.body.email);
               }
+<<<<<<< HEAD
               if (req.body.latitude !== undefined && req.body.longitude !== undefined){
+=======
+              if (!!req.body.latitude  && !!req.body.longitude ){
+>>>>>>> oceano
                 myRef.set({
                     latitude: req.body.latitude,
                     longitude: req.body.longitude,
                     date: Firebase.ServerValue.TIMESTAMP,
                     email: req.body.email
                 });
+                 httpRes.resFast(res, "{\"message\":\"User "+ req.body.email +" registered\"}", 200);
               }else{
-                 httpRes.resError(res, 'Please consider all the necessary fields for this request ' + req.params.email, 404, { 'Content-Type': 'text/plain' });
+                  httpRes.resError(res, 'Please consider all the necessary fields for this request ' + req.body.email, 404, { 'Content-Type': 'text/plain' });
+
               }
               
             }, function (errorObject) {
-                  console.log("The read failed: " + errorObject.code);
+                 logger.logError("The read failed: " + errorObject.code);
             });
-            httpRes.resFast(res, "{\"message\":\"User "+ req.body.email +" registered\"}", 200);
+           
           
         }
         else {

@@ -13,7 +13,8 @@ exports.resError = function (res, msg, errorCode, Content) {
         res.write(msg);
         res.end("");
     } catch(err){
-            return res.status(301).send({message: ' There was an error processing your request'});
+            logger.logError(err);
+             return res.status(301).send({message: ' There was an error processing your request'});
     }
 }
 
