@@ -23,11 +23,8 @@ exports.presence=function (req, res) {
               }else{
                 logger.logMessage(" New stream for user "+req.body.email);
               }
-<<<<<<< HEAD
-              if (req.body.latitude !== undefined && req.body.longitude !== undefined){
-=======
+
               if (!!req.body.latitude  && !!req.body.longitude ){
->>>>>>> oceano
                 myRef.set({
                     latitude: req.body.latitude,
                     longitude: req.body.longitude,
